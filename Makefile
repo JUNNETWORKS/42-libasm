@@ -33,6 +33,5 @@ TEST_EXE = a.out
 
 .PHONY: test
 test: $(NAME)
-	gcc -arch x86_64 -lSystem -o $(TEST_EXE) main.c $(NAME)
+	gcc -arch x86_64 -lSystem -g -fsanitize=address -o $(TEST_EXE) main.c $(NAME)
 	./$(TEST_EXE)
-	$(RM) $(TEST_EXE)

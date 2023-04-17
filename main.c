@@ -15,5 +15,6 @@ int main(int argc, char **argv) {
 static void test_ft_strlen() {
   printf("empty: %zu\n", ft_strlen(""));
   assert(ft_strlen("") == 0);
+  printf("hello: %zu\n", ft_strlen("hello"));
   assert(ft_strlen("hello") == 5);
 }
