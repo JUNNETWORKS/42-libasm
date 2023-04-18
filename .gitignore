@@ -4,3 +4,6 @@ a.out
 
 # lldb temporary files
 *.dSYM/
+
+# Editor
+.vscode/
