@@ -5,16 +5,24 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <sys/errno.h>
 #include "main.h"
 
 static void test_ft_strlen();
 static void test_ft_strcpy();
 static void test_ft_strcmp();
+static void test_ft_read();
+static void test_ft_write();
+static void test_ft_strdup();
 
 int main(int argc, char **argv) {
   test_ft_strlen();
   test_ft_strcpy();
   test_ft_strcmp();
+  test_ft_read();
+  test_ft_write();
+  test_ft_strdup();
 }
 
 static void test_ft_strlen() {
@@ -76,4 +84,30 @@ static void test_ft_strcmp() {
     assert(ft_strcmp(s1, s2) > 0);
     printf("hello2 OK\n");
   }
+}
+
+static void test_ft_read() {
+  printf("\n\n\n\n========== ft_read ==========\n");
+
+}
+
+static void test_ft_write() {
+  printf("\n\n\n\n========== ft_write ==========\n");
+
+  const char *s = "Hello from test_ft_write()\n";
+  int len = ft_write(1, s, strlen(s));
+  assert(len == strlen(s));
+  len = ft_write(1, "", 0);
+  assert(len == 0);
+
+  // Error
+  len = ft_write(-1, "", 0);
+  printf("Error case\n");
+  printf("len: %d\n", len);
+  assert(len == EBADF);
+  assert(errno == EBADF);
+}
+
+static void test_ft_strdup() {
+  printf("\n\n\n\n========== ft_strdup ==========\n");
 }
