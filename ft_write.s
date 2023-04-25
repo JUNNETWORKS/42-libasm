@@ -1,6 +1,6 @@
 global _ft_write
 
-extern __error;
+extern ___error
 
 section .text
 
@@ -12,12 +12,12 @@ section .text
 _ft_write:
     mov rax, 0x2000004   ; 2 << 24 + 4
     syscall
-    jb error
-    move errno, rax;
-    move rax, -1;
+    jc set_errno         ; FreeBSD ではシステムコールが失敗したとき、carry flag が立つ
     ret
 
-set_error:
+set_errno:
     mov r8, rax
-    call __error         ; __error() が errno を格納するアドレスを返す
+    call ___error         ; ___error() が errno を格納するアドレスを返す
     mov [rax], r8
+    mov rax, -1          ; ft_write() の返り値
+    ret

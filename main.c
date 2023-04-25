@@ -104,7 +104,7 @@ static void test_ft_write() {
   len = ft_write(-1, "", 0);
   printf("Error case\n");
   printf("len: %d\n", len);
-  assert(len == EBADF);
+  assert(len == -1);
   assert(errno == EBADF);
 }
 
