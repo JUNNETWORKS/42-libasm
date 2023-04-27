@@ -105,6 +105,7 @@ static void test_ft_read() {
     buf[res] = '\0';
 
     assert(strcmp(buf_ft, buf) == 0);
+    close(fd);
   }
 }
 
@@ -118,8 +119,8 @@ static void test_ft_write() {
   assert(len == 0);
 
   // Error
-  len = ft_write(-1, "", 0);
   printf("Error case\n");
+  len = ft_write(-1, "", 0);
   printf("len: %d\n", len);
   assert(len == -1);
   assert(errno == EBADF);

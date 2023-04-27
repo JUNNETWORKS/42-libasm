@@ -16,8 +16,8 @@ _ft_read:
     ret
 
 set_errno:
-    mov r8, rax
+    push rax
     call ___error         ; ___error() が errno を格納するアドレスを返す
-    mov [rax], r8
-    mov rax, -1          ; ft_read() の返り値
+    pop qword[rax]
+    mov rax, -1           ; ft_read() の返り値
     ret
