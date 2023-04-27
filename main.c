@@ -2,6 +2,8 @@
 テスト
 */
 
+#include <unistd.h>
+#include <sys/fcntl.h>
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -89,6 +91,21 @@ static void test_ft_strcmp() {
 static void test_ft_read() {
   printf("\n\n\n\n========== ft_read ==========\n");
 
+  {
+    char buf[256];
+    char buf_ft[256];
+
+    int fd = open("main.c", O_RDONLY);
+    int res_ft = ft_read(fd, buf_ft, 255);
+    buf_ft[res_ft] = '\0';
+
+    lseek(fd, 0, SEEK_SET);
+
+    int res = read(fd, buf, 255);
+    buf[res] = '\0';
+
+    assert(strcmp(buf_ft, buf) == 0);
+  }
 }
 
 static void test_ft_write() {
