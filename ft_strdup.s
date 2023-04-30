@@ -19,10 +19,6 @@ section .text
 ; r9:  len of s
 ; r10:  allocated memory
 _ft_strdup:
-    ; return NULL if s is NULL
-    cmp rdi, 0
-    je ret_null
-
     ; get length of s 
     push rdi
     call _ft_strlen
