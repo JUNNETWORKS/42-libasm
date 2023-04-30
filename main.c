@@ -18,6 +18,12 @@ static void test_ft_read();
 static void test_ft_write();
 static void test_ft_strdup();
 
+static void test_ft_atoi_base();
+static void test_ft_list_push_front();
+static void test_ft_list_size();
+static void test_ft_list_sort();
+static void test_ft_list_remove_if();
+
 int main(int argc, char **argv) {
   test_ft_strlen();
   test_ft_strcpy();
@@ -25,6 +31,13 @@ int main(int argc, char **argv) {
   test_ft_read();
   test_ft_write();
   test_ft_strdup();
+
+  // bonus
+  test_ft_atoi_base();
+  test_ft_list_push_front();
+  test_ft_list_size();
+  test_ft_list_sort();
+  test_ft_list_remove_if();
 }
 
 static void test_ft_strlen() {
@@ -137,4 +150,24 @@ static void test_ft_strdup() {
     free(exp);
     free(ans);
   }
+}
+
+static void test_ft_atoi_base() {
+  printf("\n\n\n\n========== ft_atoi_base ==========\n");
+}
+
+static void test_ft_list_push_front() {
+  printf("\n\n\n\n========== ft_list_push_front ==========\n");
+}
+
+static void test_ft_list_size(){
+  printf("\n\n\n\n========== ft_list_size ==========\n");
+}
+
+static void test_ft_list_sort(){
+  printf("\n\n\n\n========== ft_list_sort ==========\n");
+}
+
+static void test_ft_list_remove_if(){
+  printf("\n\n\n\n========== ft_list_remove_if ==========\n");
 }

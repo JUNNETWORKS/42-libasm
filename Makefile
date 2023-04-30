@@ -27,7 +27,7 @@ fclean: clean
 re: fclean all
 
 .PHONY: bonus
-bonus:
+bonus: $(NAME)
 
 TEST_EXE = a.out
 

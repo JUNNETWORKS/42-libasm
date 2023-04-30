@@ -18,3 +18,5 @@
 - [C言語とアセンブリ言語の相互呼び出し](https://qiita.com/hiro4669/items/348ba278aa31aa58fa95)
 - [X86_64: レジスタについて](https://sott0n.github.io/posts/x86_64_basic/)
 - [lldbでIntel記法を使う](https://qiita.com/hobo0xcc/items/5f24899e010bc89154d1)
+- [Assembly-programming](https://www.finddevguides.com/Assembly-programming)
+- [libasmTester (2019+)](https://github.com/Tripouille/libasmTester)
