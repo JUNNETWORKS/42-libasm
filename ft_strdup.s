@@ -15,9 +15,6 @@ section .text
 ; }
 ;
 ; rdi: 1st argument. s.
-; r8:  s
-; r9:  len of s
-; r10:  allocated memory
 _ft_strdup:
     ; get length of s 
     push rdi
