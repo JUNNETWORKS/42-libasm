@@ -15,10 +15,9 @@ section .text
 
 ; rdi: 1st argument. dst.
 ; rsi: 2nd argument. src.
-; r8:  a copy of dst pointer.
 ; r9b:  src[i]
 _ft_strcpy:
-  mov r8, rdi
+  push rdi
 
   loop:
     mov r9b, [rsi]
@@ -32,5 +31,5 @@ _ft_strcpy:
   mov r9b, [rsi]
   mov [rdi], r9b
 
-  mov rax, rdi
+  pop rax
   ret
