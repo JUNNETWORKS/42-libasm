@@ -15,3 +15,6 @@
 - [X86アセンブラ/x86アーキテクチャ - Wikibooks](https://ja.wikibooks.org/wiki/X86%E3%82%A2%E3%82%BB%E3%83%B3%E3%83%96%E3%83%A9/x86%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3)
 - [x86アセンブリ言語での関数コール](https://vanya.jp.net/os/x86call/)
 - [Chapter 11. x86 Assembly Language Programming - FreeBSD](https://docs.freebsd.org/en/books/developers-handbook/x86/)
+- [C言語とアセンブリ言語の相互呼び出し](https://qiita.com/hiro4669/items/348ba278aa31aa58fa95)
+- [X86_64: レジスタについて](https://sott0n.github.io/posts/x86_64_basic/)
+- [lldbでIntel記法を使う](https://qiita.com/hobo0xcc/items/5f24899e010bc89154d1)

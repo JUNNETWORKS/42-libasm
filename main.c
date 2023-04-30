@@ -128,4 +128,13 @@ static void test_ft_write() {
 
 static void test_ft_strdup() {
   printf("\n\n\n\n========== ft_strdup ==========\n");
+
+  {
+    const char *s = "This is a great text2.";
+    const char *exp = ft_strdup(s);
+    const char *ans = strdup(s);
+    assert(strcmp(exp, ans) == 0);
+    free(exp);
+    free(ans);
+  }
 }
