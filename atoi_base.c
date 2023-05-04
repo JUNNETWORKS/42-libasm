@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <limits.h>
 
 int ft_atoi_base(char *str, char *base);
 
@@ -41,7 +42,7 @@ static bool is_valid_base(char *base) {
 }
 
 static char *skip_spaces(char *str) {
-  while (*str && *str <= 32 && *str == 127) {
+  while (*str && (*str <= 32 || *str == 127)) {
     str++;
   }
   return str;
@@ -67,6 +68,9 @@ int ft_atoi_base(char *str, char *base) {
   int num = 0;
   int idx;
   while (*str && (idx = ft_strchr(base, *str)) != -1) {
+    if ((sign > 0 && num > (INT_MAX - idx) / base_len) || (sign < 0 && -1 * num < (INT_MIN + idx) / base_len)) {
+      return 0;
+    }
     num = num * base_len + idx;
     str++;
   }
@@ -77,6 +81,18 @@ int ft_atoi_base(char *str, char *base) {
 int		main(void)
 {
 	printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	++++133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	     ---101010", "01"));
+	printf("%d\n", ft_atoi_base("	     101010", "01"));
 	printf("%d\n", ft_atoi_base(" 	+---539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base(" 	+539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base(" 	539", "0123456789abcdef"));
+
+  // overflow and undeflow tests
+  printf("----- overflow and undeflow tests -----\n");
+	printf("%d\n", ft_atoi_base("	+++++2147483647", "0123456789"));
+	printf("%d\n", ft_atoi_base("	+++++2147483648", "0123456789"));  // overflow
+	printf("%d\n", ft_atoi_base("	+++++--2147483648", "0123456789"));
+	printf("%d\n", ft_atoi_base("	+++++--2147483649", "0123456789"));  // underflow
 }
