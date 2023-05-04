@@ -147,13 +147,53 @@ static void test_ft_strdup() {
     const char *exp = ft_strdup(s);
     const char *ans = strdup(s);
     assert(strcmp(exp, ans) == 0);
-    free(exp);
-    free(ans);
+    free((void *)exp);
+    free((void *)ans);
   }
 }
 
 static void test_ft_atoi_base() {
   printf("\n\n\n\n========== ft_atoi_base ==========\n");
+
+  // all printf are for debug
+	printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	++++133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	     ---101010", "01"));
+	printf("%d\n", ft_atoi_base("	     101010", "01"));
+	printf("%d\n", ft_atoi_base(" 	+---539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base(" 	+539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base(" 	539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base("     ", "0123456789abcdef"));
+
+  // overflow and undeflow tests
+  printf("----- overflow and undeflow tests -----\n");
+	printf("%d\n", ft_atoi_base("	+++++2147483647", "0123456789"));
+	printf("%d\n", ft_atoi_base("	+++++2147483648", "0123456789"));  // overflow
+	printf("%d\n", ft_atoi_base("	+++++--2147483648", "0123456789"));
+	printf("%d\n", ft_atoi_base("	+++++--2147483649", "0123456789"));  // underflow
+
+	assert(-133742 == ft_atoi_base("	+++++--133742", "0123456789"));
+	assert(133742 == ft_atoi_base("	++++133742", "0123456789"));
+	assert(133742 == ft_atoi_base("	133742", "0123456789"));
+	assert(133742 == ft_atoi_base("	133742 133742", "0123456789"));
+	assert(-42 == ft_atoi_base("	     ---101010", "01"));
+	assert(42 == ft_atoi_base("	     101010", "01"));
+	assert(-1337 == ft_atoi_base(" 	+---539", "0123456789abcdef"));
+	assert(1337 == ft_atoi_base(" 	+539", "0123456789abcdef"));
+	assert(1337 == ft_atoi_base(" 	539", "0123456789abcdef"));
+	assert(0 == ft_atoi_base("     ", "0123456789abcdef"));
+	assert(0 == ft_atoi_base("", "0123456789abcdef"));
+	assert(0 == ft_atoi_base(NULL, "0123456789abcdef"));
+	assert(0 == ft_atoi_base("00", "0"));
+	assert(0 == ft_atoi_base("00", NULL));
+
+  // overflow and undeflow tests
+  printf("----- overflow and undeflow tests -----\n");
+	assert(2147483647 == ft_atoi_base("	+++++2147483647", "0123456789"));
+	assert(0 == ft_atoi_base("	+++++2147483648", "0123456789"));  // overflow
+	assert(-2147483648 == ft_atoi_base("	+++++--2147483648", "0123456789"));
+	assert(0 == ft_atoi_base("	+++++--2147483649", "0123456789"));  // underflow
 }
 
 static void test_ft_list_push_front() {
