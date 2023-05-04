@@ -40,6 +40,9 @@ section .text
 ;
 _ft_atoi_base:
   push_stack_frame 32
+  MOV [rbp - 8], rdi
+  MOV [rbp - 16], rsi
+
   CMP [rbp - 8], BYTE 0
   JE .ret_zero
 
