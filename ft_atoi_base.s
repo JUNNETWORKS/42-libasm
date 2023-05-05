@@ -1,9 +1,10 @@
-global _ft_atoi_base
+global _ft_atoi_base, _is_valid_base
 
 extern _ft_strlen
 
 ; create stack frame
 ; 1st argument is a total size of local variables
+; rspを16で割り切れる数にしておかないと呼び出し規約違反になる
 %macro push_stack_frame 1
   PUSH rbp
   MOV rbp, rsp
@@ -39,16 +40,16 @@ section .text
 ; [rbp - 32]: int idx.
 ;
 _ft_atoi_base:
-  push_stack_frame 32
+  push_stack_frame 0x20
   MOV [rbp - 8], rdi
   MOV [rbp - 16], rsi
 
   CMP [rbp - 8], BYTE 0
   JE .ret_zero
 
-  ; bool is_valid_base(char *base)
+  ; bool _is_valid_base(char *base)
   MOV rdi, [rbp - 16]
-  CALL is_valid_base
+  CALL _is_valid_base
   CMP RAX, 1
   JNE .ret_zero
 
@@ -132,13 +133,13 @@ _ft_atoi_base:
 
   .ret_zero:
     MOV RAX, 0
-    pop_stack_frame 32
+    pop_stack_frame 0x20
   
   .ret:
     ; return sign * num;
     MOV rax, [rbp - 28]
     IMUL DWORD [rbp - 20]
-    pop_stack_frame 32
+    pop_stack_frame 0x20
 
 ; int ft_strchr(char *s, char c)
 ;
@@ -164,7 +165,7 @@ ft_strchr:
     MOV rax, -1
     RET
 
-; bool is_valid_base(char *base)
+; int _is_valid_base(char *base)
 ;
 ; ===== arguments =====
 ; rdi: 1st argument. base.
@@ -172,11 +173,8 @@ ft_strchr:
 ; ===== local variables ===== 
 ; [rbp - 8]: base.
 ;
-is_valid_base:
-  ; create new stack frame
-  PUSH rbp
-  MOV rbp, rsp
-  SUB rsp, 8  ; sizeof(base)
+_is_valid_base:
+  push_stack_frame 0x10  ; 16バイトアライメント
 
   ; copy 1st argument to local variable
   MOV [rbp - 8], rdi
@@ -193,7 +191,7 @@ is_valid_base:
 
   .loop:
     ; loop condition
-    CMP r8, [rbp-8]
+    MOV r8, [rbp - 8]
     CMP BYTE [r8], BYTE 0
     JE .ret_true
 
@@ -239,12 +237,7 @@ is_valid_base:
     JMP .return
 
   .return:
-    ; restore previous stack frame
-    MOV rsp, rbp
-    POP rbp
-    ; remove sizeof(byte) from stack
-    ; https://www.felixcloutier.com/x86/ret
-    RET 8
+    pop_stack_frame 0x10
 
 ; char *skip_spaces(char *str)
 ;

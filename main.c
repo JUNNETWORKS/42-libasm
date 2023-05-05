@@ -152,8 +152,14 @@ static void test_ft_strdup() {
   }
 }
 
+int is_valid_base(char *base);
+
 static void test_ft_atoi_base() {
   printf("\n\n\n\n========== ft_atoi_base ==========\n");
+
+  int res = is_valid_base("0123456789");
+  printf("is_valid_base: %d\n", res);
+  printf("is_valid_base: %d\n", is_valid_base("0"));
 
   // all printf are for debug
 	printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
