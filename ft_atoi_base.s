@@ -16,100 +16,100 @@ section .text
 ; rsi: 2nd argument. base.
 ; 
 ; ===== local variables ===== 
-; [rbp - 8]:  char *str.
-; [rbp - 16]: char *base.
-; [rbp - 20]: int sign.
-; [rbp - 24]: int base_len.
-; [rbp - 28]: int num.
-; [rbp - 32]: int idx.
+; [rbp - 0x8]:  char *str.
+; [rbp - 0x10]: char *base.
+; [rbp - 0x14]: int sign.
+; [rbp - 0x18]: int base_len.
+; [rbp - 0x1c]: int num.
+; [rbp - 0x20]: int idx.
 ;
 _ft_atoi_base:
-  stack_frame_prologue 0x28  ; 16bytes alignment
-  MOV [rbp - 8], rdi
-  MOV [rbp - 16], rsi
+  stack_frame_prologue 0x20
+  MOV [rbp - 0x8], rdi
+  MOV [rbp - 0x10], rsi
 
-  CMP QWORD [rbp - 8], 0
+  CMP QWORD [rbp - 0x8], 0
   JE .ret_zero
 
   ; bool _is_valid_base(char *base)
-  MOV rdi, [rbp - 16]
+  MOV rdi, [rbp - 0x10]
   CALL _is_valid_base
   CMP rax, 1
   JNE .ret_zero
 
   ; char *skip_spaces(char *str)
-  MOV rdi, [rbp - 8]
+  MOV rdi, [rbp - 0x8]
   CALL skip_spaces
-  MOV [rbp - 8], rax
-
-  ; ===== ここまで動作確認済み =====
+  MOV [rbp - 0x8], rax
 
   ; char *parse_sign(char *str, int *sign)
-  MOV rdi, [rbp - 8]
+  MOV rdi, [rbp - 0x8]
   MOV r8, rbp
   SUB r8, 20
   MOV rsi, r8
   CALL _parse_sign
-  MOV [rbp - 8], rax
+  MOV [rbp - 0x8], rax
 
   ; ===== parse number ===== 
   ; base_len = strlen(base);
-  MOV rdi, [rbp - 16]
+  MOV rdi, [rbp - 0x10]
   CALL _ft_strlen
-  MOV [rbp - 24], rax
+  MOV [rbp - 0x18], eax
+
+  ; ===== ここまで動作確認済み =====
 
   ; num = 0
-  MOV [rbp - 28], DWORD 0
+  MOV DWORD [rbp - 0x1c], 0
 
   .loop:
-    MOV r9, [rbp - 8]
+    MOV r9, [rbp - 0x8]
     CMP [r9], BYTE 0
 
     ; idx = ft_strchr(base, *str);
-    MOV rdi, [rbp - 16]
+    MOV rdi, [rbp - 0x10]
     MOV rsi, [r9]
     CALL ft_strchr
-    MOV [rbp - 32], rax
+    MOV [rbp - 0x20], rax
 
     ; if (idx == -1) return sign * num;
-    CMP [rbp - 32], DWORD -1
+    CMP [rbp - 0x20], DWORD -1
     JE .ret
 
-    CMP [rbp - 20], DWORD 0
+    CMP [rbp - 0x14], DWORD 0
     JG .check_overflow   ; if sign > 0
     JL .check_underflow  ; if sign < 0
     .continue_parse_number:
     
     ; num = num * base_len + idx;
-    MOV rax, [rbp - 28]
-    MUL DWORD [rbp - 24]
-    ADD rax, [rbp - 32]
-    MOV [rbp - 28], rax
+    MOV rax, [rbp - 0x1c]
+    MUL DWORD [rbp - 0x18]
+    ADD rax, [rbp - 0x20]
+    MOV [rbp - 0x1c], rax
 
     ; str++;
-    MOV r8, [rbp - 8]
+    MOV r8, [rbp - 0x8]
     INC r8
-    MOV [rbp - 8], r8
+    MOV [rbp - 0x8], r8
 
     JMP .loop
 
   ; if (num > (INT_MAX - idx) / base_len) return 0;
   .check_overflow:
     MOV rax, INT_MAX
-    SUB rax, [rbp - 32]
-    IDIV DWORD [rbp - 24]
-    CMP [rbp - 28], rax
+    SUB rax, [rbp - 0x20]
+    IDIV DWORD [rbp - 0x18]
+    CMP [rbp - 0x1c], rax
     JG .ret_zero
 
   ; if (-1 * num < (INT_MIN + idx) / base_len) return 0;
   .check_underflow:
     ; (INT_MIN + idx) / base_len
     MOV rax, INT_MIN
-    ADD rax, [rbp - 32]
-    IDIV DWORD [rbp - 24]
+    ADD rax, [rbp - 0x20]
+    IDIV DWORD [rbp - 0x18]
     MOV r8, rax
     ; -1 * num
-    MOV rax, [rbp - 28]
+    MOV rax, [rbp - 0x1c]
     MOV r9, -1
     IMUL r9
     CMP rax, r8
@@ -122,8 +122,8 @@ _ft_atoi_base:
 
   .ret:
     ; return sign * num;
-    MOV rax, [rbp - 28]
-    IMUL DWORD [rbp - 20]
+    MOV rax, [rbp - 0x1c]
+    IMUL DWORD [rbp - 0x14]
     stack_frame_epilogue
     ret
 
@@ -157,27 +157,27 @@ ft_strchr:
 ; rdi: 1st argument. base.
 ; 
 ; ===== local variables ===== 
-; [rbp - 8]: base.
+; [rbp - 0x8]: base.
 ;
 _is_valid_base:
   stack_frame_prologue 0x10
 
   ; copy 1st argument to local variable
-  MOV [rbp - 8], rdi
+  MOV [rbp - 0x8], rdi
 
   ; return false if base == null
-  CMP QWORD [rbp - 8], QWORD 0
+  CMP QWORD [rbp - 0x8], QWORD 0
   JE .ret_false
 
   ; return false if len(base) <= 1
-  MOV rdi, [rbp - 8]
+  MOV rdi, [rbp - 0x8]
   CALL _ft_strlen
   CMP rax, 1
   JLE .ret_false
 
   .loop:
     ; loop condition
-    MOV r8, [rbp - 8]
+    MOV r8, [rbp - 0x8]
     CMP BYTE [r8], BYTE 0
     JE .ret_true
 
