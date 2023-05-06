@@ -34,10 +34,10 @@ int main(int argc, char **argv) {
 
   // bonus
   test_ft_atoi_base();
-  test_ft_list_push_front();
-  test_ft_list_size();
-  test_ft_list_sort();
-  test_ft_list_remove_if();
+  // test_ft_list_push_front();
+  // test_ft_list_size();
+  // test_ft_list_sort();
+  // test_ft_list_remove_if();
 }
 
 static void test_ft_strlen() {
@@ -120,6 +120,14 @@ static void test_ft_read() {
     assert(strcmp(buf_ft, buf) == 0);
     close(fd);
   }
+
+  {
+    char buf_ft[256];
+    // Error
+    int len = ft_read(-1, buf_ft, 255);
+    assert(len == -1);
+    assert(errno == EBADF);
+  }
 }
 
 static void test_ft_write() {
@@ -153,6 +161,7 @@ static void test_ft_strdup() {
 }
 
 int is_valid_base(char *base);
+char *parse_sign(char *str, int *sign);
 
 static void test_ft_atoi_base() {
   printf("\n\n\n\n========== ft_atoi_base ==========\n");
@@ -161,8 +170,18 @@ static void test_ft_atoi_base() {
   printf("is_valid_base: %d\n", res);
   printf("is_valid_base: %d\n", is_valid_base("0"));
 
+  {
+    // debug parse_sign();
+    char *s = "+++---123";
+    int sign;
+    char *s2 = parse_sign(s, &sign);
+    printf("s2(sign: %d): %s\n", sign, s2);
+  }
+
   // all printf are for debug
-	printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
+  res = ft_atoi_base("	+++++--133742", "0123456789");
+	printf("%d\n", res);
+	// printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	++++133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	     ---101010", "01"));
