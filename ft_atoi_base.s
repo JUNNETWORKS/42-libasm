@@ -1,4 +1,4 @@
-global _ft_atoi_base, _is_valid_base, _parse_sign
+global _ft_atoi_base, _is_valid_base, _parse_sign, _skip_spaces, _ft_strchr
 
 extern _ft_strlen
 
@@ -39,7 +39,7 @@ _ft_atoi_base:
 
   ; char *skip_spaces(char *str)
   MOV rdi, [rbp - 0x8]
-  CALL skip_spaces
+  CALL _skip_spaces
   MOV [rbp - 0x8], rax
 
   ; char *parse_sign(char *str, int *sign)
@@ -67,7 +67,7 @@ _ft_atoi_base:
     ; idx = ft_strchr(base, *str);
     MOV rdi, [rbp - 0x10]
     MOV sil, BYTE [rbp - 0x8]
-    CALL ft_strchr
+    CALL _ft_strchr
     MOV [rbp - 0x20], eax
 
     ; if (idx == -1) return sign * num;
@@ -135,7 +135,7 @@ _ft_atoi_base:
 ; 
 ; rdi: 1st argument. s.
 ; sil: 1 byte of rsi register. 2nd argument. c.
-ft_strchr:
+_ft_strchr:
   XOR eax, eax
   .loop:
     CMP [rdi], BYTE 0
@@ -189,7 +189,7 @@ _is_valid_base:
     INC rdi
     MOV r8, [rbp - 0x8]
     MOV sil, [r8]
-    CALL ft_strchr
+    CALL _ft_strchr
     CMP eax, -1
     JNE .ret_false
 
@@ -231,7 +231,7 @@ _is_valid_base:
 ;
 ; rdi: 1st argument. str.
 ;
-skip_spaces:
+_skip_spaces:
   stack_frame_prologue 0x10
   .loop:
     CMP BYTE [rdi], BYTE 0
