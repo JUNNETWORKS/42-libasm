@@ -66,7 +66,7 @@ _ft_atoi_base:
 
     ; idx = ft_strchr(base, *str);
     MOV rdi, [rbp - 0x10]
-    MOV sil, [rbp - 0x8]
+    MOV sil, BYTE [rbp - 0x8]
     CALL ft_strchr
     MOV [rbp - 0x20], eax
 
@@ -96,6 +96,7 @@ _ft_atoi_base:
   .check_overflow:
     MOV eax, INT_MAX
     SUB eax, [rbp - 0x20]
+    CDQ ; Sign extend EAX to EDX:EAX
     IDIV DWORD [rbp - 0x18]
     CMP DWORD [rbp - 0x1c], eax
     JG .ret_zero
@@ -106,6 +107,7 @@ _ft_atoi_base:
     ; (INT_MIN + idx) / base_len
     MOV eax, INT_MIN
     ADD eax, [rbp - 0x20]
+    CDQ ; Sign extend EAX to EDX:EAX
     IDIV DWORD [rbp - 0x18]
     MOV r8d, eax
     ; -1 * num
