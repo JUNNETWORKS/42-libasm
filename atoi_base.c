@@ -43,7 +43,11 @@ static bool is_valid_base(char *base) {
 
 static char *skip_spaces(char *str) {
   while (*str) {
-    if (*str > 32 && *str != 127) break;
+    if (*str > 32) {
+      if (*str != 127) {
+        break;
+      }
+    }
     str++;
   }
   return str;
@@ -103,7 +107,7 @@ int ft_atoi_base(char *str, char *base) {
 
 int		main(void)
 {
-	printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
+	printf("%d\n", ft_atoi_base("	 +++++--133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	++++133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	     ---101010", "01"));
@@ -111,6 +115,7 @@ int		main(void)
 	printf("%d\n", ft_atoi_base(" 	+---539", "0123456789abcdef"));
 	printf("%d\n", ft_atoi_base(" 	+539", "0123456789abcdef"));
 	printf("%d\n", ft_atoi_base(" 	539", "0123456789abcdef"));
+	printf("%d\n", ft_atoi_base(" +	539", "0123456789abcdef"));
 	printf("%d\n", ft_atoi_base("     ", "0123456789abcdef"));
 
   // overflow and undeflow tests
