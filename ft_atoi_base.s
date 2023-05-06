@@ -145,14 +145,14 @@ _ft_atoi_base:
 ;
 ; 
 ; rdi: 1st argument. s.
-; rsi: 2nd argument. c.
+; sil: 1 byte of rsi register. 2nd argument. c.
 ft_strchr:
   XOR rax, rax
   .loop:
     CMP [rdi], BYTE 0
     JE .ret_not_found
 
-    CMP [rdi], rsi
+    CMP [rdi], sil
     JE .ret_found
 
     INC rax
@@ -208,22 +208,20 @@ _is_valid_base:
     MOV r8, [rbp-8]
     MOV r8, [r8]
     ; base[i] <= 32
-    CMP r8, 32
+    CMP r8b, 32
     JLE .ret_false
     ; base[i] == '+'
-    CMP r8, 43
-    JLE .ret_false
+    CMP r8b, 43
+    JE .ret_false
     ; base[i] == '-'
-    CMP r8, 45
-    JLE .ret_false
+    CMP r8b, 45
+    JE .ret_false
     ; base[i] == 127
-    CMP r8, 127
-    JLE .ret_false
+    CMP r8b, 127
+    JE .ret_false
 
     ; base++
-    MOV r8, [rbp-8]
-    INC r8
-    MOV [rbp-8], r8
+    INC QWORD [rbp-8]
 
     JMP .loop
 
