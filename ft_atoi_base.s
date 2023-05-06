@@ -95,7 +95,7 @@ _ft_atoi_base:
   ; if (num > (INT_MAX - idx) / base_len) return 0;
   .check_overflow:
     MOV eax, INT_MAX
-    SUB eax, [rbp - 0x20]
+    SUB eax, [rbp - 0x1c]
     IDIV DWORD [rbp - 0x18]
     CMP [rbp - 0x1c], eax
     JG .ret_zero
@@ -105,7 +105,7 @@ _ft_atoi_base:
   .check_underflow:
     ; (INT_MIN + idx) / base_len
     MOV eax, INT_MIN
-    ADD eax, [rbp - 0x20]
+    ADD eax, [rbp - 0x1c]
     IDIV DWORD [rbp - 0x18]
     MOV r8d, eax
     ; -1 * num
