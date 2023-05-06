@@ -62,14 +62,13 @@ _ft_atoi_base:
   MOV DWORD [rbp - 0x1c], 0
 
   .loop:
-    MOV r9, [rbp - 0x8]
-    CMP [r9], BYTE 0
+    CMP [rbp - 0x8], BYTE 0
 
     ; idx = ft_strchr(base, *str);
     MOV rdi, [rbp - 0x10]
-    MOV rsi, [r9]
+    MOV sil, [rbp - 0x8]
     CALL ft_strchr
-    MOV [rbp - 0x20], rax
+    MOV [rbp - 0x20], eax
 
     ; if (idx == -1) return sign * num;
     CMP [rbp - 0x20], DWORD -1
@@ -81,10 +80,10 @@ _ft_atoi_base:
     .continue_parse_number:
     
     ; num = num * base_len + idx;
-    MOV rax, [rbp - 0x1c]
+    MOV eax, [rbp - 0x1c]
     MUL DWORD [rbp - 0x18]
-    ADD rax, [rbp - 0x20]
-    MOV [rbp - 0x1c], rax
+    ADD eax, [rbp - 0x20]
+    MOV [rbp - 0x1c], eax
 
     ; str++;
     MOV r8, [rbp - 0x8]
@@ -95,28 +94,30 @@ _ft_atoi_base:
 
   ; if (num > (INT_MAX - idx) / base_len) return 0;
   .check_overflow:
-    MOV rax, INT_MAX
-    SUB rax, [rbp - 0x20]
+    MOV eax, INT_MAX
+    SUB eax, [rbp - 0x20]
     IDIV DWORD [rbp - 0x18]
-    CMP [rbp - 0x1c], rax
+    CMP [rbp - 0x1c], eax
     JG .ret_zero
+    JMP .continue_parse_number
 
   ; if (-1 * num < (INT_MIN + idx) / base_len) return 0;
   .check_underflow:
     ; (INT_MIN + idx) / base_len
-    MOV rax, INT_MIN
-    ADD rax, [rbp - 0x20]
+    MOV eax, INT_MIN
+    ADD eax, [rbp - 0x20]
     IDIV DWORD [rbp - 0x18]
-    MOV r8, rax
+    MOV r8d, eax
     ; -1 * num
-    MOV rax, [rbp - 0x1c]
-    MOV r9, -1
-    IMUL r9
-    CMP rax, r8
+    MOV eax, [rbp - 0x1c]
+    MOV r9d, -1
+    IMUL r9d
+    CMP eax, r8d
     JL .ret_zero
+    JMP .continue_parse_number
 
   .ret_zero:
-    MOV RAX, 0
+    MOV rax, 0
     stack_frame_epilogue 
     ret
 
@@ -229,6 +230,7 @@ _is_valid_base:
 ; rdi: 1st argument. str.
 ;
 skip_spaces:
+  stack_frame_prologue 0x10
   .loop:
     CMP BYTE [rdi], BYTE 0
     JE .ret
@@ -245,6 +247,7 @@ skip_spaces:
   
   .ret:
     MOV rax, rdi
+    stack_frame_epilogue
     RET
 
 ; char *parse_sign(char *str, int *sign)
@@ -252,6 +255,7 @@ skip_spaces:
 ; rdi: 1st argument. str.
 ; rsi: 2nd argument. sign. the result is stored to this var.
 _parse_sign:
+  stack_frame_prologue 0x10
   MOV DWORD [rsi], DWORD 1
   .loop:
     CMP BYTE [rdi], BYTE 0
@@ -275,4 +279,5 @@ _parse_sign:
 
   .ret:
     MOV rax, rdi
+    stack_frame_epilogue
     RET
