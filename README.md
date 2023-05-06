@@ -10,7 +10,12 @@
 # r8 register が指すメモリアドレスのデータを見る
 (lldb)$ memory read '$r8'
 # [$rbp - 8] が指すメモリアドレスのデータを見る
-(lldb)$ memory read '[$rbp - 8]'
+(lldb)$ memory read '*(char **)($rbp - 0x8)'
+
+# 現在停止中の行から2行前、10行後を表示するように設定変更
+# https://stackoverflow.com/questions/52274360/how-to-list-more-lines-of-code-code-in-lldb
+(lldb)$ settings set stop-line-count-before 2
+(lldb)$ settings set stop-line-count-after 10
 ```
 
 ## References
@@ -36,3 +41,4 @@
 - [RET — Return from Procedure](https://www.felixcloutier.com/x86/ret)
 - [x86 Assembly Guide](https://flint.cs.yale.edu/cs421/papers/x86-asm/asm.html)
 - [メモリ、バイト、レジスタ - Jun's Homepage](https://www.mztn.org/lxasm64/amd03.html)
+- [x86-64のCalling Convention](https://freak-da.hatenablog.com/entry/2021/03/25/172248)
