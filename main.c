@@ -180,7 +180,7 @@ static int ft_atoi_base_with_asm(char *str, char *base) {
   // parse sign
   str = parse_sign(str, &sign);
   // parse number
-  base_len = strlen(base);
+  base_len = ft_strlen(base);
   num = 0;
   while (*str) {
     idx = ft_strchr(base, *str);
@@ -231,13 +231,6 @@ static void test_ft_atoi_base() {
 	printf("%d\n", ft_atoi_base_with_asm(" 	539", "0123456789abcdef"));
 	printf("%d\n", ft_atoi_base_with_asm("     ", "0123456789abcdef"));
 
-  // overflow and undeflow tests
-  printf("----- overflow and undeflow tests -----\n");
-	printf("%d\n", ft_atoi_base_with_asm("	+++++2147483647", "0123456789"));
-	printf("%d\n", ft_atoi_base_with_asm("	+++++2147483648", "0123456789"));  // overflow
-	printf("%d\n", ft_atoi_base_with_asm("	+++++--2147483648", "0123456789"));
-	printf("%d\n", ft_atoi_base_with_asm("	+++++--2147483649", "0123456789"));  // underflow
-
 	assert(-133742 == ft_atoi_base_with_asm("	+++++--133742", "0123456789"));
 	assert(133742 == ft_atoi_base_with_asm("	++++133742", "0123456789"));
 	assert(133742 == ft_atoi_base_with_asm("	133742", "0123456789"));
@@ -255,6 +248,11 @@ static void test_ft_atoi_base() {
 
   // overflow and undeflow tests
   printf("----- overflow and undeflow tests -----\n");
+	printf("%d\n", ft_atoi_base_with_asm("	+++++2147483647", "0123456789"));
+	printf("%d\n", ft_atoi_base_with_asm("	+++++2147483648", "0123456789"));  // overflow
+	printf("%d\n", ft_atoi_base_with_asm("	+++++--2147483648", "0123456789"));
+	printf("%d\n", ft_atoi_base_with_asm("	+++++--2147483649", "0123456789"));  // underflow
+
 	assert(2147483647 == ft_atoi_base_with_asm("	+++++2147483647", "0123456789"));
 	assert(0 == ft_atoi_base_with_asm("	+++++2147483648", "0123456789"));  // overflow
 	assert(-2147483648 == ft_atoi_base_with_asm("	+++++--2147483648", "0123456789"));
