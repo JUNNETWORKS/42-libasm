@@ -1,0 +1,22 @@
+%ifndef STACKFRAME_MAC
+
+; create stack frame
+; 1st argument is a total size of local variables
+; rspを(16で割り切れる数+8)にしておかないと呼び出し規約違反になる
+; The end of the input argument area shall be aligned on a 16 (32, if __m256 is passed on stack) byte boundary. In other words, the value (%rsp + 8) is always a multiple of 16 (32) when control is transferred to the function entry point.
+%macro stack_frame_prologue 1
+  PUSH rbp
+  MOV rbp, rsp
+  SUB rsp, %1
+%endmacro
+
+%macro stack_frame_epilogue 1
+  ; restore previous stack frame
+  MOV rsp, rbp
+  POP rbp
+  ; remove bytes from stack
+  ; https://www.felixcloutier.com/x86/ret
+  RET %1
+%endmacro
+
+%endif

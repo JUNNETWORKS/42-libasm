@@ -2,23 +2,7 @@ global _ft_atoi_base, _is_valid_base, _parse_sign
 
 extern _ft_strlen
 
-; create stack frame
-; 1st argument is a total size of local variables
-; rspを(16で割り切れる数+8)にしておかないと呼び出し規約違反になる
-%macro push_stack_frame 1
-  PUSH rbp
-  MOV rbp, rsp
-  SUB rsp, %1
-%endmacro
-
-%macro pop_stack_frame 1
-  ; restore previous stack frame
-  MOV rsp, rbp
-  POP rbp
-  ; remove bytes from stack
-  ; https://www.felixcloutier.com/x86/ret
-  RET %1
-%endmacro
+%include "stackframe.mac"
 
 %define INT_MAX 2147483647
 %define INT_MIN -2147483648 
@@ -40,7 +24,7 @@ section .text
 ; [rbp - 32]: int idx.
 ;
 _ft_atoi_base:
-  push_stack_frame 0x20  ; 16bytes alignment
+  stack_frame_prologue 0x28  ; 16bytes alignment
   MOV [rbp - 8], rdi
   MOV [rbp - 16], rsi
 
@@ -50,7 +34,7 @@ _ft_atoi_base:
   ; bool _is_valid_base(char *base)
   MOV rdi, [rbp - 16]
   CALL _is_valid_base
-  CMP RAX, 1
+  CMP rax, 1
   JNE .ret_zero
 
   ; char *skip_spaces(char *str)
@@ -109,7 +93,6 @@ _ft_atoi_base:
 
     JMP .loop
 
-
   ; if (num > (INT_MAX - idx) / base_len) return 0;
   .check_overflow:
     MOV rax, INT_MAX
@@ -117,7 +100,6 @@ _ft_atoi_base:
     IDIV DWORD [rbp - 24]
     CMP [rbp - 28], rax
     JG .ret_zero
-
 
   ; if (-1 * num < (INT_MIN + idx) / base_len) return 0;
   .check_underflow:
@@ -135,13 +117,13 @@ _ft_atoi_base:
 
   .ret_zero:
     MOV RAX, 0
-    pop_stack_frame 0x20
+    stack_frame_epilogue 0x28
   
   .ret:
     ; return sign * num;
     MOV rax, [rbp - 28]
     IMUL DWORD [rbp - 20]
-    pop_stack_frame 0x20
+    stack_frame_epilogue 0x28
 
 ; int ft_strchr(char *s, char c)
 ;
@@ -176,7 +158,7 @@ ft_strchr:
 ; [rbp - 8]: base.
 ;
 _is_valid_base:
-  push_stack_frame 0x10  ; 16バイトアライメント
+  stack_frame_prologue 0x10
 
   ; copy 1st argument to local variable
   MOV [rbp - 8], rdi
@@ -237,7 +219,7 @@ _is_valid_base:
     JMP .return
 
   .return:
-    pop_stack_frame 0x10
+    stack_frame_epilogue 0x10
 
 ; char *skip_spaces(char *str)
 ;
