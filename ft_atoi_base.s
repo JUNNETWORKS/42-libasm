@@ -185,15 +185,13 @@ _is_valid_base:
     ; return false if (ft_strchr(base + i + 1, base[i]) != -1)
     MOV rdi, [rbp-8]
     INC rdi
-    MOV r8, [rbp-8]
-    MOV rsi, [r8]
+    MOV sil, [rbp-8]
     CALL ft_strchr
-    CMP rax, -1
+    CMP eax, -1
     JNE .ret_false
 
     ; return false if (base[i] <= 32 || base[i] == '+' || base[i] == '-' || base[i] == 127)
-    MOV r8, [rbp-8]
-    MOV r8, [r8]
+    MOV r8b, [rbp-8]
     ; base[i] <= 32
     CMP r8b, 32
     JLE .ret_false
@@ -214,11 +212,11 @@ _is_valid_base:
 
   ; return lables are positioned below
   .ret_true:
-    MOV rax, 1
+    MOV eax, 1
     JMP .return
 
   .ret_false:
-    MOV rax, 0
+    MOV eax, 0
     JMP .return
 
   .return:
