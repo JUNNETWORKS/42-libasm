@@ -1,10 +1,10 @@
-global _ft_atoi_base, _is_valid_base
+global _ft_atoi_base, _is_valid_base, _parse_sign
 
 extern _ft_strlen
 
 ; create stack frame
 ; 1st argument is a total size of local variables
-; rspを16で割り切れる数にしておかないと呼び出し規約違反になる
+; rspを(16で割り切れる数+8)にしておかないと呼び出し規約違反になる
 %macro push_stack_frame 1
   PUSH rbp
   MOV rbp, rsp
@@ -40,11 +40,11 @@ section .text
 ; [rbp - 32]: int idx.
 ;
 _ft_atoi_base:
-  push_stack_frame 0x20
+  push_stack_frame 0x20  ; 16bytes alignment
   MOV [rbp - 8], rdi
   MOV [rbp - 16], rsi
 
-  CMP [rbp - 8], BYTE 0
+  CMP QWORD [rbp - 8], 0
   JE .ret_zero
 
   ; bool _is_valid_base(char *base)
@@ -58,12 +58,14 @@ _ft_atoi_base:
   CALL skip_spaces
   MOV [rbp - 8], rax
 
+  ; ===== ここまで動作確認済み =====
+
   ; char *parse_sign(char *str, int *sign)
   MOV rdi, [rbp - 8]
   MOV r8, rbp
   SUB r8, 20
   MOV rsi, r8
-  CALL parse_sign
+  CALL _parse_sign
   MOV [rbp - 8], rax
 
   ; ===== parse number ===== 
@@ -253,7 +255,7 @@ skip_spaces:
 
     .is_127:
       CMP BYTE [rdi], BYTE 127
-      JE .ret
+      JNE .ret
       JMP .continue_loop
   
   .ret:
@@ -263,8 +265,8 @@ skip_spaces:
 ; char *parse_sign(char *str, int *sign)
 ;
 ; rdi: 1st argument. str.
-; rsi: 1st argument. sign. the result is stored to this var.
-parse_sign:
+; rsi: 2nd argument. sign. the result is stored to this var.
+_parse_sign:
   MOV DWORD [rsi], DWORD 1
   .loop:
     CMP BYTE [rdi], BYTE 0
