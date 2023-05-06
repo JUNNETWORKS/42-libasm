@@ -185,15 +185,17 @@ _is_valid_base:
     JE .ret_true
 
     ; return false if (ft_strchr(base + i + 1, base[i]) != -1)
-    MOV rdi, [rbp-8]
+    MOV rdi, [rbp - 0x8]
     INC rdi
-    MOV sil, [rbp-8]
+    MOV r8, [rbp - 0x8]
+    MOV sil, [r8]
     CALL ft_strchr
     CMP eax, -1
     JNE .ret_false
 
     ; return false if (base[i] <= 32 || base[i] == '+' || base[i] == '-' || base[i] == 127)
-    MOV r8b, [rbp-8]
+    MOV r8, [rbp - 0x8]
+    MOV r8b, [r8]
     ; base[i] <= 32
     CMP r8b, 32
     JLE .ret_false
@@ -208,7 +210,7 @@ _is_valid_base:
     JE .ret_false
 
     ; base++
-    INC QWORD [rbp-8]
+    INC QWORD [rbp - 0x8]
 
     JMP .loop
 
