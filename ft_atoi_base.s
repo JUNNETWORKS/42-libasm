@@ -2,7 +2,7 @@ global _ft_atoi_base, _is_valid_base, _parse_sign
 
 extern _ft_strlen
 
-%include "stackframe.mac"
+%include "stack_frame.mac"
 
 %define INT_MAX 2147483647
 %define INT_MIN -2147483648 
@@ -117,13 +117,15 @@ _ft_atoi_base:
 
   .ret_zero:
     MOV RAX, 0
-    stack_frame_epilogue 0x28
-  
+    stack_frame_epilogue 
+    ret
+
   .ret:
     ; return sign * num;
     MOV rax, [rbp - 28]
     IMUL DWORD [rbp - 20]
-    stack_frame_epilogue 0x28
+    stack_frame_epilogue
+    ret
 
 ; int ft_strchr(char *s, char c)
 ;
@@ -219,7 +221,8 @@ _is_valid_base:
     JMP .return
 
   .return:
-    stack_frame_epilogue 0x10
+    stack_frame_epilogue
+    ret
 
 ; char *skip_spaces(char *str)
 ;

@@ -1,5 +1,7 @@
 global _ft_strcpy
 
+%include "stack_frame.mac"
+
 section .text
 
 
@@ -16,8 +18,12 @@ section .text
 ; rdi: 1st argument. dst.
 ; rsi: 2nd argument. src.
 ; r9b:  src[i]
+;
+; ===== local variables =====
+; [ebp - 8]: char *s. 1st argument. dst
 _ft_strcpy:
-  push rdi
+  stack_frame_prologue 0x10
+  mov [rbp - 8], rdi
 
   loop:
     mov r9b, [rsi]
@@ -31,5 +37,6 @@ _ft_strcpy:
   mov r9b, [rsi]
   mov [rdi], r9b
 
-  pop rax
+  mov rax, [rbp - 8]
+  stack_frame_epilogue
   ret

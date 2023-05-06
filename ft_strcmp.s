@@ -2,6 +2,8 @@ global _ft_strcmp
 
 section .text
 
+%include "stack_frame.mac"
+
 ;int ft_strcmp(const char *s1, const char *s2) {
 ;  int i = 0;
 ;  while (s1[i] || s2[i]) {
@@ -18,6 +20,7 @@ section .text
 ; r8: *s1
 ; r9: *s2
 _ft_strcmp:
+  stack_frame_prologue 0x10
   xor r8, r8
   xor r9, r9
 
@@ -42,4 +45,5 @@ _ft_strcmp:
   return:
     mov rax, r8
     sub rax, r9
+    stack_frame_epilogue
     ret

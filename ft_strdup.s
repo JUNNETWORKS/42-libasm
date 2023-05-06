@@ -1,9 +1,10 @@
 global _ft_strdup
 
+%include "stack_frame.mac"
+
 extern _malloc, _ft_strlen, _ft_strcpy
 
 section .text
-
 
 ; char *ft_strdup(const char *s) {
 ;   if (s == NULL)
@@ -15,9 +16,13 @@ section .text
 ; }
 ;
 ; rdi: 1st argument. s.
+;
+; ===== local variables =====
+; [rbp - 8]: char* s.
 _ft_strdup:
+    stack_frame_prologue 0x10
+    mov [rbp - 0x8], rdi
     ; get length of s 
-    push rdi
     call _ft_strlen
     mov rdi, rax
 
@@ -30,11 +35,13 @@ _ft_strdup:
 
     ; copy string
     mov rdi, rax
-    pop rsi
+    mov rsi, [rbp - 8]
     call _ft_strcpy
 
+    stack_frame_epilogue
     ret
 
 ret_null:
     mov rax, 0
+    stack_frame_epilogue
     ret
