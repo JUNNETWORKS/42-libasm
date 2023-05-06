@@ -34,8 +34,8 @@ _ft_atoi_base:
   ; bool _is_valid_base(char *base)
   MOV rdi, [rbp - 0x10]
   CALL _is_valid_base
-  CMP rax, 1
-  JNE .ret_zero
+  CMP eax, 1
+  JL .ret_zero
 
   ; char *skip_spaces(char *str)
   MOV rdi, [rbp - 0x8]
@@ -97,7 +97,7 @@ _ft_atoi_base:
     MOV eax, INT_MAX
     SUB eax, [rbp - 0x20]
     IDIV DWORD [rbp - 0x18]
-    CMP [rbp - 0x1c], eax
+    CMP DWORD [rbp - 0x1c], eax
     JG .ret_zero
     JMP .continue_parse_number
 
@@ -123,7 +123,7 @@ _ft_atoi_base:
 
   .ret:
     ; return sign * num;
-    MOV rax, [rbp - 0x1c]
+    MOV eax, DWORD [rbp - 0x1c]
     IMUL DWORD [rbp - 0x14]
     stack_frame_epilogue
     ret

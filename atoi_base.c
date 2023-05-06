@@ -90,11 +90,13 @@ int ft_atoi_base(char *str, char *base) {
     idx = ft_strchr(base, *str);
     if (idx == -1) break;
     if (sign > 0) {
+      // num * base_len + idx > INT_MAX
       if (num > (INT_MAX - idx) / base_len) {
         return 0;
       }
     }
     if (sign < 0){
+      // -num * base_len - idx < INT_MIN
       if (-1 * num < (INT_MIN + idx) / base_len) {
         return 0;
       }
