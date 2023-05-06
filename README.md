@@ -4,6 +4,15 @@
 
 `gcc -S -masm=intel tmp.c` でIntel記法のアセンブリを出力できる
 
+### LLDB
+
+```
+# r8 register が指すメモリアドレスのデータを見る
+(lldb)$ memory read '$r8'
+# [$rbp - 8] が指すメモリアドレスのデータを見る
+(lldb)$ memory read '[$rbp - 8]'
+```
+
 ## References
 
 - [x86-64 アセンブリ Jun's Homepage](https://www.mztn.org/lxasm64/amd00.html)
