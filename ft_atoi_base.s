@@ -134,7 +134,7 @@ _ft_atoi_base:
 ; rdi: 1st argument. s.
 ; sil: 1 byte of rsi register. 2nd argument. c.
 ft_strchr:
-  XOR rax, rax
+  XOR eax, eax
   .loop:
     CMP [rdi], BYTE 0
     JE .ret_not_found
@@ -142,14 +142,14 @@ ft_strchr:
     CMP [rdi], sil
     JE .ret_found
 
-    INC rax
+    INC eax
     INC rdi
 
     JMP .loop
   .ret_found:
     RET
   .ret_not_found:
-    MOV rax, -1
+    MOV eax, -1
     RET
 
 ; int _is_valid_base(char *base)
@@ -173,7 +173,7 @@ _is_valid_base:
   ; return false if len(base) <= 1
   MOV rdi, [rbp - 0x8]
   CALL _ft_strlen
-  CMP rax, 1
+  CMP eax, 1
   JLE .ret_false
 
   .loop:

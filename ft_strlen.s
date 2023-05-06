@@ -9,17 +9,17 @@ section .text     ; テキスト領域
 ; r9b: 1byte register. use to load a peice of data from passed address
 _ft_strlen:
   stack_frame_prologue 0x10
-  xor r8, r8       ; len = 0
+  xor r8d, r8d       ; len = 0
 
   loop:
     mov r9b, [rdi]
     cmp r9b, 0
     je return_len
-    inc r8
+    inc r8d
     inc rdi
     jmp loop
 
   return_len:
-    mov rax, r8
+    mov eax, r8d
     stack_frame_epilogue
     ret

@@ -24,10 +24,10 @@ _ft_strdup:
     mov [rbp - 0x8], rdi
     ; get length of s 
     call _ft_strlen
-    mov rdi, rax
+    mov edi, eax
 
     ; allocate memory
-    inc rdi
+    inc edi
     call _malloc
     ; return NULL if memory allocation is failed
     cmp rax, 0
