@@ -268,7 +268,8 @@ void ft_list_swap(t_list *prev, t_list *current, t_list *next) {
   }
   if (next) {
     current->next = next->next;
-  } else { current->next = NULL;
+  } else {
+    current->next = NULL;
   }
   next->next = current;
 }
