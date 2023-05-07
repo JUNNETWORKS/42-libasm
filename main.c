@@ -231,6 +231,19 @@ static void test_ft_list_push_front() {
   }
 }
 
+static void cleanup_lst(t_list *lst, void (*remove)()) {
+  // cleanup
+  t_list *current, *prev;
+  prev = NULL;
+  current = lst;
+  while (current != NULL) {
+    remove(current->data);
+    prev = current;
+    current = current->next;
+    free(prev);
+  }
+}
+
 static void test_ft_list_size(){
   printf("\n\n\n\n========== ft_list_size ==========\n");
 
@@ -245,20 +258,111 @@ static void test_ft_list_size(){
   ft_list_push_front(&lst, strdup("element1"));
   assert(ft_list_size(lst) == 3);
 
-  // cleanup
-  t_list *current, *prev;
-  prev = NULL;
-  current = lst;
-  while (current != NULL) {
-    free(current->data);
-    prev = current;
-    current = current->next;
-    free(prev);
+  cleanup_lst(lst, free);
+}
+
+// current と next を入れ替える
+void ft_list_swap(t_list *prev, t_list *current, t_list *next) {
+  if (prev) {
+    prev->next = next;
   }
+  if (next) {
+    current->next = next->next;
+  } else { current->next = NULL;
+  }
+  next->next = current;
+}
+
+void ft_list_sort(t_list **begin_list, int (*cmp)()) {
+  if (begin_list == NULL) {
+    return;
+  }
+  if (*begin_list == NULL) {
+    return;
+  }
+  if (cmp == NULL) {
+    return;
+  }
+  int lst_len = ft_list_size(*begin_list);
+
+  int i = 1;
+  t_list *head = *begin_list;
+  while (i < lst_len) {
+    t_list *prev;
+    t_list *current;
+    prev = NULL;
+    current = head;
+    
+    while (current->next) {
+      if (cmp(current->data, current->next->data) > 0) {
+        if (current == head) {
+          head = current->next;
+        }
+        t_list *tmp = current->next;
+        ft_list_swap(prev, current, current->next);
+        prev = tmp;
+      }else{
+        prev = current;
+        current = current->next;
+      }
+    }
+    i++;
+  }
+  *begin_list = head;
 }
 
 static void test_ft_list_sort(){
   printf("\n\n\n\n========== ft_list_sort ==========\n");
+
+ {
+    t_list *lst;
+    lst = NULL;
+
+    ft_list_push_front(&lst, strdup("a"));
+    ft_list_push_front(&lst, strdup("f"));
+    ft_list_push_front(&lst, strdup("c"));
+    ft_list_push_front(&lst, strdup("g"));
+    ft_list_push_front(&lst, strdup("b"));
+    ft_list_push_front(&lst, strdup("e"));
+    ft_list_push_front(&lst, strdup("d"));
+
+    ft_list_sort(&lst, strcmp);
+
+    t_list *current = lst;
+    char c = 'a';
+    while(current) {
+      printf("%c: %s\n", c, current->data);
+
+      char buf[10];
+      sprintf(buf, "%c", c);
+      assert(strcmp(current->data, buf) == 0);
+      current = current->next;
+
+      c++;
+    }
+
+    cleanup_lst(lst, free);
+ }
+
+ {
+    t_list *lst;
+    lst = NULL;
+
+    ft_list_push_front(&lst, strdup("f"));
+    ft_list_push_front(&lst, strdup("a"));
+
+    ft_list_sort(&lst, strcmp);
+
+    assert(strcmp(lst->data, "a") == 0);
+    assert(strcmp(lst->next->data, "f") == 0);
+    assert(lst->next->next == NULL);
+
+    cleanup_lst(lst, free);
+ }
+
+ {
+  ft_list_sort(NULL, NULL);
+ }
 }
 
 static void test_ft_list_remove_if(){
