@@ -261,18 +261,7 @@ static void test_ft_list_size(){
   cleanup_lst(lst, free);
 }
 
-// current と next を入れ替える
-void ft_list_swap(t_list *prev, t_list *current, t_list *next) {
-  if (prev) {
-    prev->next = next;
-  }
-  if (next) {
-    current->next = next->next;
-  } else {
-    current->next = NULL;
-  }
-  next->next = current;
-}
+void ft_list_swap(t_list *prev, t_list *current, t_list *next);
 
 void ft_list_sort(t_list **begin_list, int (*cmp)()) {
   if (begin_list == NULL) {
