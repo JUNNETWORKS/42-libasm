@@ -205,17 +205,6 @@ static void test_ft_atoi_base() {
 	assert(0 == ft_atoi_base("	+++++--2147483649", "0123456789"));  // underflow
 }
 
-// void ft_list_push_front(t_list **begin_list, void *data) {
-//   if (begin_list == NULL) {
-//     return;
-//   }
-//   t_list *new_ele = malloc(sizeof(t_list));
-//   new_ele->data = data;
-//   new_ele->next = *begin_list;
-//   *begin_list = new_ele;
-//   return;
-// }
-
 static void test_ft_list_push_front() {
   printf("\n\n\n\n========== ft_list_push_front ==========\n");
 
