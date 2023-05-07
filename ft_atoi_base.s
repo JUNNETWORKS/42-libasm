@@ -34,8 +34,8 @@ _ft_atoi_base:
   ; bool _is_valid_base(char *base)
   MOV rdi, [rbp - 0x10]
   CALL _is_valid_base
-  CMP eax, 1
-  JL .ret_zero
+  CMP eax, 0
+  JE .ret_zero
 
   ; char *skip_spaces(char *str)
   MOV rdi, [rbp - 0x8]
@@ -45,7 +45,7 @@ _ft_atoi_base:
   ; char *parse_sign(char *str, int *sign)
   MOV rdi, [rbp - 0x8]
   MOV r8, rbp
-  SUB r8, 20
+  SUB r8, 0x14
   MOV rsi, r8
   CALL _parse_sign
   MOV [rbp - 0x8], rax
@@ -62,11 +62,13 @@ _ft_atoi_base:
   MOV DWORD [rbp - 0x1c], 0
 
   .loop:
-    CMP [rbp - 0x8], BYTE 0
+    MOV r8, [rbp - 0x8]
+    CMP BYTE [r8], BYTE 0
 
     ; idx = ft_strchr(base, *str);
     MOV rdi, [rbp - 0x10]
-    MOV sil, BYTE [rbp - 0x8]
+    MOV r8, [rbp - 0x8]
+    MOV sil, BYTE [r8]
     CALL _ft_strchr
     MOV [rbp - 0x20], eax
 
