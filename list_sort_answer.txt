@@ -1,0 +1,126 @@
+gcc -arch x86_64 -lSystem -g -fsanitize=address -o a.out main.c libasm.a
+./a.out
+Hello from test_ft_write()
+
+
+
+
+========== ft_strlen ==========
+empty: 0
+hello: 5
+
+
+
+
+========== ft_strcpy ==========
+Empty String OK
+Hello World OK
+
+
+
+
+========== ft_strcmp ==========
+empty OK
+1 2 OK
+2 1 OK
+h{e, a}llo OK
+hello2 OK
+
+
+
+
+========== ft_read ==========
+
+
+
+
+========== ft_write ==========
+Error case
+len: -1
+
+
+
+
+========== ft_strdup ==========
+
+
+
+
+========== ft_atoi_base ==========
+-133742
+133742
+133742
+-42
+42
+-1337
+1337
+1337
+0
+----- overflow and undeflow tests -----
+2147483647
+0
+-2147483648
+0
+
+
+
+
+========== ft_list_push_front ==========
+
+
+
+
+========== ft_list_size ==========
+
+
+
+
+========== ft_list_sort ==========
+a: d, b: e, strcmp: -1
+a: e, b: b, strcmp: 1
+a: e, b: g, strcmp: -1
+a: g, b: c, strcmp: 1
+a: g, b: f, strcmp: 1
+a: g, b: a, strcmp: 1
+a: d, b: b, strcmp: 1
+a: d, b: e, strcmp: -1
+a: e, b: c, strcmp: 1
+a: e, b: f, strcmp: -1
+a: f, b: a, strcmp: 1
+a: f, b: g, strcmp: -1
+a: b, b: d, strcmp: -1
+a: d, b: c, strcmp: 1
+a: d, b: e, strcmp: -1
+a: e, b: a, strcmp: 1
+a: e, b: f, strcmp: -1
+a: f, b: g, strcmp: -1
+a: b, b: c, strcmp: -1
+a: c, b: d, strcmp: -1
+a: d, b: a, strcmp: 1
+a: d, b: e, strcmp: -1
+a: e, b: f, strcmp: -1
+a: f, b: g, strcmp: -1
+a: b, b: c, strcmp: -1
+a: c, b: a, strcmp: 1
+a: c, b: d, strcmp: -1
+a: d, b: e, strcmp: -1
+a: e, b: f, strcmp: -1
+a: f, b: g, strcmp: -1
+a: b, b: a, strcmp: 1
+a: b, b: c, strcmp: -1
+a: c, b: d, strcmp: -1
+a: d, b: e, strcmp: -1
+a: e, b: f, strcmp: -1
+a: f, b: g, strcmp: -1
+a: a
+b: b
+c: c
+d: d
+e: e
+f: f
+g: g
+
+
+
+
+========== ft_list_remove_if ==========

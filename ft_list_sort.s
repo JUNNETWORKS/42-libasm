@@ -50,14 +50,14 @@ _ft_list_sort:
   CALL _ft_list_size
   MOV DWORD [rbp - ofs_list_len], eax
 
-  ; ===== ここまで動作確認済み ===== 
-
   ; int i = 1
   MOV DWORD [rbp - ofs_i], DWORD 1
   ; t_list *head = *begin_list;
   MOV r8, [rbp - ofs_begin_list] ; r8: t_list**
   MOV r8, [r8]                   ; r8: t_list*
   MOV [rbp - ofs_head], r8
+
+  ; ===== ここまで動作確認済み ===== 
 
   .loop:
     ; if (i >= list_len) break;
@@ -108,7 +108,6 @@ _ft_list_sort:
         ; t_list *tmp = current->next;
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x8]          ; t_list.next*
-        MOV r8, [r8]
         MOV [rbp - ofs_tmp], r8, 
 
         ; ft_list_swap(prev, current, current->next);
@@ -128,11 +127,12 @@ _ft_list_sort:
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV [rbp - ofs_prev], r8
         ; current = current->next;
+        MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x08]         ; t_list.next*
         MOV [rbp - ofs_current], r8
         JMP .continue_loop2
 
-      .continue_loop2
+      .continue_loop2:
 
       JMP .loop2
 
