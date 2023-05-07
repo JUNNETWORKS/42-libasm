@@ -35,10 +35,10 @@ int main(int argc, char **argv) {
 
   // bonus
   test_ft_atoi_base();
-  // test_ft_list_push_front();
-  // test_ft_list_size();
-  // test_ft_list_sort();
-  // test_ft_list_remove_if();
+  test_ft_list_push_front();
+  test_ft_list_size();
+  test_ft_list_sort();
+  test_ft_list_remove_if();
 }
 
 static void test_ft_strlen() {
@@ -205,8 +205,41 @@ static void test_ft_atoi_base() {
 	assert(0 == ft_atoi_base("	+++++--2147483649", "0123456789"));  // underflow
 }
 
+// void ft_list_push_front(t_list **begin_list, void *data) {
+//   if (begin_list == NULL) {
+//     return;
+//   }
+//   t_list *new_ele = malloc(sizeof(t_list));
+//   new_ele->data = data;
+//   new_ele->next = *begin_list;
+//   *begin_list = new_ele;
+//   return;
+// }
+
 static void test_ft_list_push_front() {
   printf("\n\n\n\n========== ft_list_push_front ==========\n");
+
+  t_list *lst;
+  lst = NULL;
+  ft_list_push_front(&lst, strdup("element3"));
+  ft_list_push_front(&lst, strdup("element2"));
+  ft_list_push_front(&lst, strdup("element1"));
+
+  assert(strcmp(lst->data, "element1") == 0);
+  assert(strcmp(lst->next->data, "element2") == 0);
+  assert(strcmp(lst->next->next->data, "element3") == 0);
+  assert(lst->next->next->next == NULL);
+
+  // cleanup
+  t_list *current, *prev;
+  prev = NULL;
+  current = lst;
+  while (current != NULL) {
+    free(current->data);
+    prev = current;
+    current = current->next;
+    free(prev);
+  }
 }
 
 static void test_ft_list_size(){
