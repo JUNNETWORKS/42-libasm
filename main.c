@@ -261,6 +261,11 @@ static void test_ft_list_size(){
   cleanup_lst(lst, free);
 }
 
+int my_strcmp(char *a, char *b) {
+  printf("a: %s, b: %s\n", a, b);
+  return strcmp(a, b);
+}
+
 void ft_list_swap(t_list *prev, t_list *current, t_list *next);
 
 // void ft_list_sort(t_list **begin_list, int (*cmp)()) {
@@ -316,7 +321,7 @@ static void test_ft_list_sort(){
     ft_list_push_front(&lst, strdup("e"));
     ft_list_push_front(&lst, strdup("d"));
 
-    ft_list_sort(&lst, strcmp);
+    ft_list_sort(&lst, my_strcmp);
 
     t_list *current = lst;
     char c = 'a';

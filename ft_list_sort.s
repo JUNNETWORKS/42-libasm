@@ -85,7 +85,7 @@ _ft_list_sort:
       MOV rdi, [rdi]               ; t_list.data*
       MOV r8, [rbp - ofs_current]  ; t_list*
       MOV r8, [r8 + 0x08]          ; t_list.next*
-      MOV rsi, [r8]                 ; t_list*
+      MOV rsi, [r8]                 ; t_list.next*
       CALL [rbp - ofs_cmp]
       CMP rax, 0
       JG .a_is_gt_b
@@ -96,18 +96,19 @@ _ft_list_sort:
         ;   head = current->next;
         ; }
         MOV r8, [rbp - ofs_current] ; t_list*
-        MOV r8, [r8]                ; t_list.data*
         MOV r9, [rbp - ofs_head]    ; t_list*
+        CMP r8, r9
         JNE .skip_head_assignment
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x8]          ; t_list.next*
-        MOV [r9], r8
+        MOV [rbp - ofs_head], r8
 
         .skip_head_assignment:
 
         ; t_list *tmp = current->next;
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x8]          ; t_list.next*
+        MOV r8, [r8]
         MOV [rbp - ofs_tmp], r8, 
 
         ; ft_list_swap(prev, current, current->next);
