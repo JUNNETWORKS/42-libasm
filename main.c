@@ -231,8 +231,47 @@ static void test_ft_list_push_front() {
   }
 }
 
+// int ft_list_size(t_list *begin_list) {
+//   if (begin_list == NULL) {
+//     return 0;
+//   }
+
+//   int len = 0;
+//   t_list *current = begin_list;
+//   while (1) {
+//     if (current == NULL) {
+//       break;
+//     }
+//     current = current->next;
+//     len += 1;
+//   }
+//   return len;
+// }
+
 static void test_ft_list_size(){
   printf("\n\n\n\n========== ft_list_size ==========\n");
+
+  t_list *lst;
+  lst = NULL;
+
+  assert(ft_list_size(lst) == 0);
+  ft_list_push_front(&lst, strdup("element3"));
+  assert(ft_list_size(lst) == 1);
+  ft_list_push_front(&lst, strdup("element2"));
+  assert(ft_list_size(lst) == 2);
+  ft_list_push_front(&lst, strdup("element1"));
+  assert(ft_list_size(lst) == 3);
+
+  // cleanup
+  t_list *current, *prev;
+  prev = NULL;
+  current = lst;
+  while (current != NULL) {
+    free(current->data);
+    prev = current;
+    current = current->next;
+    free(prev);
+  }
 }
 
 static void test_ft_list_sort(){
