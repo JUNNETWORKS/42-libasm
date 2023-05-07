@@ -56,8 +56,6 @@ _ft_atoi_base:
   CALL _ft_strlen
   MOV [rbp - 0x18], eax
 
-  ; ===== ここまで動作確認済み =====
-
   ; num = 0
   MOV DWORD [rbp - 0x1c], 0
 
