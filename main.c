@@ -231,23 +231,6 @@ static void test_ft_list_push_front() {
   }
 }
 
-// int ft_list_size(t_list *begin_list) {
-//   if (begin_list == NULL) {
-//     return 0;
-//   }
-
-//   int len = 0;
-//   t_list *current = begin_list;
-//   while (1) {
-//     if (current == NULL) {
-//       break;
-//     }
-//     current = current->next;
-//     len += 1;
-//   }
-//   return len;
-// }
-
 static void test_ft_list_size(){
   printf("\n\n\n\n========== ft_list_size ==========\n");
 
