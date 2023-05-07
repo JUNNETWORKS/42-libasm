@@ -263,43 +263,43 @@ static void test_ft_list_size(){
 
 void ft_list_swap(t_list *prev, t_list *current, t_list *next);
 
-void ft_list_sort(t_list **begin_list, int (*cmp)()) {
-  if (begin_list == NULL) {
-    return;
-  }
-  if (*begin_list == NULL) {
-    return;
-  }
-  if (cmp == NULL) {
-    return;
-  }
-  int lst_len = ft_list_size(*begin_list);
+// void ft_list_sort(t_list **begin_list, int (*cmp)()) {
+//   if (begin_list == NULL) {
+//     return;
+//   }
+//   if (*begin_list == NULL) {
+//     return;
+//   }
+//   if (cmp == NULL) {
+//     return;
+//   }
+//   int lst_len = ft_list_size(*begin_list);
 
-  int i = 1;
-  t_list *head = *begin_list;
-  while (i < lst_len) {
-    t_list *prev;
-    t_list *current;
-    prev = NULL;
-    current = head;
+//   int i = 1;
+//   t_list *head = *begin_list;
+//   while (i < lst_len) {
+//     t_list *prev;
+//     t_list *current;
+//     prev = NULL;
+//     current = head;
     
-    while (current->next) {
-      if (cmp(current->data, current->next->data) > 0) {
-        if (current == head) {
-          head = current->next;
-        }
-        t_list *tmp = current->next;
-        ft_list_swap(prev, current, current->next);
-        prev = tmp;
-      }else{
-        prev = current;
-        current = current->next;
-      }
-    }
-    i++;
-  }
-  *begin_list = head;
-}
+//     while (current->next) {
+//       if (cmp(current->data, current->next->data) > 0) {
+//         if (current == head) {
+//           head = current->next;
+//         }
+//         t_list *tmp = current->next;
+//         ft_list_swap(prev, current, current->next);
+//         prev = tmp;
+//       }else{
+//         prev = current;
+//         current = current->next;
+//       }
+//     }
+//     i++;
+//   }
+//   *begin_list = head;
+// }
 
 static void test_ft_list_sort(){
   printf("\n\n\n\n========== ft_list_sort ==========\n");

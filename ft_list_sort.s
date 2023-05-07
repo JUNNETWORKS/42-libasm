@@ -1,5 +1,7 @@
 global _ft_list_sort, _ft_list_swap
 
+extern _ft_list_size
+
 %include "stack_frame.mac"
 
 %define ofs_begin_list 0x08
@@ -28,126 +30,127 @@ section .text
 ; [rbp - 0x28]: t_list *prev
 ; [rbp - 0x30]: t_list *current
 ; [rbp - 0x38]: t_list *tmp
-; _ft_list_sort:
-  ; stack_frame_prologue 0x40
+_ft_list_sort:
+  stack_frame_prologue 0x40
 
-  ; MOV [rbp - ofs_begin_list], rdi
-  ; MOV [rbp - ofs_cmp], rsi
+  MOV [rbp - ofs_begin_list], rdi
+  MOV [rbp - ofs_cmp], rsi
 
-  ; ; if (!begin_list || !(*begin_list) || !cmp) return;
-  ; CMP rdi, 0
-  ; JE .ret
-  ; CMP [rdi], 0
-  ; JE .ret
-  ; CMP rsi, 0
-  ; JE .ret
+  ; if (!begin_list || !(*begin_list) || !cmp) return;
+  CMP rdi, 0
+  JE .ret
+  CMP QWORD [rdi], 0
+  JE .ret
+  CMP rsi, 0
+  JE .ret
 
-  ; ; int lst_len = ft_list_size(*begin_list);
-  ; MOV r8, [rbp - ofs_begin_list]
-  ; MOV rdi, [r8]
-  ; CALL _ft_list_size
-  ; MOV [rbp - ofs_list_len], eax
+  ; int lst_len = ft_list_size(*begin_list);
+  MOV r8, [rbp - ofs_begin_list]  ; t_list**
+  MOV rdi, [r8]                   ; t_list*
+  CALL _ft_list_size
+  MOV DWORD [rbp - ofs_list_len], eax
 
-  ; ; int i = 1
-  ; MOV DWORD [rbp - ofs_i], DWORD 1
-  ; ; t_list *head = *begin_list;
-  ; MOV r8, [rbp - ofs_begin_list] ; r8: t_list**
-  ; MOV r8, [r8]                   ; r8: t_list*
-  ; MOV [rbp - ofs_head], r8
+  ; ===== ここまで動作確認済み ===== 
 
-  ; .loop:
-    ; // if (i >= list_len) break;
-    ; MOV r8d, [rbp - ofs_i]
-    ; CMP r8d, [rbp - ofs_list_len]
-    ; JGE .set_head_and_ret
+  ; int i = 1
+  MOV DWORD [rbp - ofs_i], DWORD 1
+  ; t_list *head = *begin_list;
+  MOV r8, [rbp - ofs_begin_list] ; r8: t_list**
+  MOV r8, [r8]                   ; r8: t_list*
+  MOV [rbp - ofs_head], r8
 
-    ; ; t_list *prev;
-    ; ; t_list *current;
-    ; ; prev = NULL;
-    ; ; current = head;
-    ; MOV QWORD [rbp - ofs_prev], 0
-    ; MOV r8, [rbp - ofs_head]
-    ; MOV [rbp - ofs_current], r8
+  .loop:
+    ; if (i >= list_len) break;
+    MOV r8d, [rbp - ofs_i]
+    CMP r8d, [rbp - ofs_list_len]
+    JGE .set_head_and_ret
 
-    ; .loop2:
-      ; ; if (current->next == 0) break;
-      ; MOV r8, [rbp - ofs_current]
-      ; ADD r8, 0x8
-      ; CMP [r8], 0
-      ; JE .end_loop2
+    ; t_list *prev;
+    ; t_list *current;
+    ; prev = NULL;
+    ; current = head;
+    MOV QWORD [rbp - ofs_prev], 0
+    MOV r8, [rbp - ofs_head]
+    MOV [rbp - ofs_current], r8
 
-      ; ; if (cmp(current->data, current->next->data) > 0)
-      ; MOV rdi, [rbp - ofs_current] ; t_list*
-      ; MOV rdi, [rdi]               ; t_list.data*
-      ; MOV r8, [rbp - ofs_current]  ; t_list*
-      ; ADD r8, 0x8
-      ; MOV r8, [r8]                 ; t_list.next*
-      ; MOV rsi, [r8]                ; t_list*
-      ; CALL [rbp - ofs_cmp]
-      ; CMP rax, 0
-      ; JG .a_is_gt_b
-      ; JLE .a_is_le_b
+    .loop2:
+      ; if (current->next == 0) break;
+      MOV r8, [rbp - ofs_current]  ; t_list*
+      ADD r8, 0x8
+      CMP QWORD [r8], 0
+      JE .end_loop2
 
-      ; .a_is_gt_b:
-        ; ; if (current == head) {
-        ; ;   head = current->next;
-        ; ; }
-        ; MOV r8, [rbp - ofs_current] ; t_list*
-        ; MOV r8, [r8]                ; t_list.data*
-        ; MOV r9, [rbp - ofs_head]    ; t_list*
-        ; JNE .skip_head_assignment
-        ; MOV r8, [rbp - ofs_current] ; t_list*
-        ; MOV r8, [r8 + 0x8]          ; t_list.next*
-        ; MOV [r9], r8
+      ; if (cmp(current->data, current->next->data) > 0)
+      MOV rdi, [rbp - ofs_current] ; t_list*
+      MOV rdi, [rdi]               ; t_list.data*
+      MOV r8, [rbp - ofs_current]  ; t_list*
+      MOV r8, [r8 + 0x08]          ; t_list.next*
+      MOV rsi, [r8]                 ; t_list*
+      CALL [rbp - ofs_cmp]
+      CMP rax, 0
+      JG .a_is_gt_b
+      JLE .a_is_le_b
 
-        ; .skip_head_assignment:
+      .a_is_gt_b:
+        ; if (current == head) {
+        ;   head = current->next;
+        ; }
+        MOV r8, [rbp - ofs_current] ; t_list*
+        MOV r8, [r8]                ; t_list.data*
+        MOV r9, [rbp - ofs_head]    ; t_list*
+        JNE .skip_head_assignment
+        MOV r8, [rbp - ofs_current] ; t_list*
+        MOV r8, [r8 + 0x8]          ; t_list.next*
+        MOV [r9], r8
 
-        ; ; t_list *tmp = current->next;
-        ; MOV r8, [rbp - ofs_current] ; t_list*
-        ; MOV r8, [r8 + 0x8]          ; t_list.next*
-        ; MOV [rbp - ofs_tmp], r8, 
+        .skip_head_assignment:
 
-        ; ; ft_list_swap(prev, current, current->next);
-        ; MOV rdi, [rbp - ofs_prev]
-        ; MOV rsi, [rbp - ofs_current]
-        ; MOV rdx, r8
-        ; CALL _ft_list_swap
+        ; t_list *tmp = current->next;
+        MOV r8, [rbp - ofs_current] ; t_list*
+        MOV r8, [r8 + 0x8]          ; t_list.next*
+        MOV [rbp - ofs_tmp], r8, 
 
-        ; ; prev = tmp;
-        ; MOV r8, [rbp - ofs_tmp]
-        ; MOV [rbp - ofs_prev], r8
+        ; ft_list_swap(prev, current, current->next);
+        MOV rdi, [rbp - ofs_prev]
+        MOV rsi, [rbp - ofs_current]
+        MOV rdx, r8
+        CALL _ft_list_swap
 
-        ; JMP .continue_loop2
+        ; prev = tmp;
+        MOV r8, [rbp - ofs_tmp]
+        MOV [rbp - ofs_prev], r8
 
-      ; .a_is_le_b:
-        ; ; prev = current;
-        ; MOV r8, [rbp - ofs_current] ; t_list*
-        ; MOV [rbp - ofs_prev], r8
-        ; ; current = current->next;
-        ; MOV r8, [r8 + 0x08]         ; t_list.next*
-        ; MOV [rbp - ofs_current], r8
-        ; JMP .continue_loop2
+        JMP .continue_loop2
 
-      ; .continue_loop2
+      .a_is_le_b:
+        ; prev = current;
+        MOV r8, [rbp - ofs_current] ; t_list*
+        MOV [rbp - ofs_prev], r8
+        ; current = current->next;
+        MOV r8, [r8 + 0x08]         ; t_list.next*
+        MOV [rbp - ofs_current], r8
+        JMP .continue_loop2
 
-      ; JMP .loop2
+      .continue_loop2
 
-    ; .end_loop2:
+      JMP .loop2
 
-    ; MOV r8d, [rbp - ofs_i]
-    ; INC r8d
-    ; MOV [rbp - ofs_i], r8d
+    .end_loop2:
 
-    ; JMP .loop
+    MOV r8d, [rbp - ofs_i]
+    INC r8d
+    MOV [rbp - ofs_i], r8d
 
-  ; .set_head_and_ret:
-    ; MOV r8, [rbp - ofs_begin_list]
-    ; MOV r9, [rbp - ofs_head]
-    ; MOV [r8], r9
+    JMP .loop
 
-  ; .ret:
-    ; stack_frame_epilogue
-    ; RET
+  .set_head_and_ret:
+    MOV r8, [rbp - ofs_begin_list]  ; t_list**
+    MOV r9, [rbp - ofs_head]        ; t_list*
+    MOV [r8], r9
+
+  .ret:
+    stack_frame_epilogue
+    RET
 
 ; // current と next を入れ替える
 ; void ft_list_swap(t_list *prev, t_list *current, t_list *next);
