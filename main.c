@@ -161,65 +161,11 @@ static void test_ft_strdup() {
   }
 }
 
-int is_valid_base(char *base);
-char *parse_sign(char *str, int *sign);
-char *skip_spaces(char *str);
-int ft_strchr(char *s, char c);
-
-static int ft_atoi_base_with_asm(char *str, char *base) {
-  int sign;
-  int base_len;
-  int num;
-  int idx;
-  // validate
-  if (str == NULL || !is_valid_base(base)) {
-    return 0;
-  }
-  // skip spaces
-  str = skip_spaces(str);
-  // parse sign
-  str = parse_sign(str, &sign);
-  // parse number
-  base_len = ft_strlen(base);
-  num = 0;
-  while (*str) {
-    idx = ft_strchr(base, *str);
-    if (idx == -1) break;
-    if (sign > 0) {
-      // num * base_len + idx > INT_MAX
-      if (num > (INT_MAX - idx) / base_len) {
-        return 0;
-      }
-    }
-    if (sign < 0){
-      // -num * base_len - idx < INT_MIN
-      if (-1 * num < (INT_MIN + idx) / base_len) {
-        return 0;
-      }
-    }
-    num = num * base_len + idx;
-    str++;
-  }
-  return sign * num;
-}
-
 static void test_ft_atoi_base() {
   printf("\n\n\n\n========== ft_atoi_base ==========\n");
 
-  int res = is_valid_base("0123456789");
-  printf("is_valid_base: %d\n", res);
-  printf("is_valid_base: %d\n", is_valid_base("0"));
-
-  {
-    // debug parse_sign();
-    char *s = "+++---123";
-    int sign;
-    char *s2 = parse_sign(s, &sign);
-    printf("s2(sign: %d): %s\n", sign, s2);
-  }
-
   // all printf are for debug
-  res = ft_atoi_base("	+++++--133742", "0123456789");
+  int res = ft_atoi_base("	+++++--133742", "0123456789");
 	printf("%d\n", res);
 	// printf("%d\n", ft_atoi_base("	+++++--133742", "0123456789"));
 	printf("%d\n", ft_atoi_base("	++++133742", "0123456789"));

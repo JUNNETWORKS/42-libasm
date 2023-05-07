@@ -1,4 +1,4 @@
-global _ft_atoi_base, _is_valid_base, _parse_sign, _skip_spaces, _ft_strchr
+global _ft_atoi_base
 
 extern _ft_strlen
 
