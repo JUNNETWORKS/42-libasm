@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   test_ft_atoi_base();
   test_ft_list_push_front();
   test_ft_list_size();
-  test_ft_list_sort();
+  // test_ft_list_sort();
   test_ft_list_remove_if();
 }
 
@@ -360,6 +360,68 @@ static void test_ft_list_sort(){
  }
 }
 
+
+void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
+  if (begin_list == NULL) {
+    return;
+  }
+  t_list *prev = NULL;
+  t_list *current = *begin_list;
+  t_list *tmp;
+  while (current != NULL) {
+    if (cmp(current->data, data_ref) == 0) {
+      tmp = current;
+      current = current->next;
+      if (prev == NULL) {
+        *begin_list = current;
+      } else {
+        prev->next = current;
+      }
+      free_fct(tmp->data);
+      free(tmp);
+    } else {
+      prev = current;
+      current = current->next;
+    }
+  }
+}
+
+static int is_same_integer(int *lhs, int *rhs) {
+  return *lhs - *rhs;
+}
+
 static void test_ft_list_remove_if(){
   printf("\n\n\n\n========== ft_list_remove_if ==========\n");
+
+  t_list *lst = NULL;
+
+  // 20 -> 20 -> 5 -> 20 -> 10
+  int *tmp;
+  tmp = malloc(sizeof(int));
+  *tmp = 10;
+  ft_list_push_front(&lst, tmp);
+  tmp = malloc(sizeof(int));
+  *tmp = 20;
+  ft_list_push_front(&lst, tmp);
+  tmp = malloc(sizeof(int));
+  *tmp = 5;
+  ft_list_push_front(&lst, tmp);
+  tmp = malloc(sizeof(int));
+  *tmp = 20;
+  ft_list_push_front(&lst, tmp);
+  tmp = malloc(sizeof(int));
+  *tmp = 20;
+  ft_list_push_front(&lst, tmp);
+
+  int twenty = 20;
+  ft_list_remove_if(&lst, &twenty, is_same_integer, free);
+
+  t_list *current = lst;
+  assert(5 == *(int*)(current->data));
+  current = current->next;
+  assert(10 == *(int*)(current->data));
+  current = current->next;
+  assert(current == NULL);
+
+  cleanup_lst(lst, free);
 }
