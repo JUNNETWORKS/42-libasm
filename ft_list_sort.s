@@ -108,7 +108,7 @@ _ft_list_sort:
         ; t_list *tmp = current->next;
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x8]          ; t_list.next*
-        MOV [rbp - ofs_tmp], r8, 
+        MOV [rbp - ofs_tmp], r8
 
         ; ft_list_swap(prev, current, current->next);
         MOV rdi, [rbp - ofs_prev]
