@@ -65,8 +65,6 @@ _ft_list_sort:
     CMP r8d, [rbp - ofs_list_len]
     JGE .set_head_and_ret
 
-    ; t_list *prev;
-    ; t_list *current;
     ; prev = NULL;
     ; current = head;
     MOV QWORD [rbp - ofs_prev], 0
@@ -74,10 +72,9 @@ _ft_list_sort:
     MOV [rbp - ofs_current], r8
 
     .loop2:
-      ; if (current->next == 0) break;
+      ; while (current->next) {
       MOV r8, [rbp - ofs_current]  ; t_list*
-      ADD r8, 0x8
-      CMP QWORD [r8], 0
+      CMP QWORD [r8 + 0x08], 0
       JE .end_loop2
 
       ; if (cmp(current->data, current->next->data) > 0)
@@ -87,7 +84,7 @@ _ft_list_sort:
       MOV r8, [r8 + 0x08]          ; t_list.next*
       MOV rsi, [r8]                 ; t_list.next*
       CALL [rbp - ofs_cmp]
-      CMP rax, 0
+      CMP eax, 0
       JG .a_is_gt_b
       JLE .a_is_le_b
 
@@ -113,7 +110,8 @@ _ft_list_sort:
         ; ft_list_swap(prev, current, current->next);
         MOV rdi, [rbp - ofs_prev]
         MOV rsi, [rbp - ofs_current]
-        MOV rdx, r8
+        MOV rdx, [rbp - ofs_current] ; t_list*
+        MOV rdx, [rdx + 0x8]          ; t_list.next*
         CALL _ft_list_swap
 
         ; prev = tmp;
@@ -130,19 +128,19 @@ _ft_list_sort:
         MOV r8, [rbp - ofs_current] ; t_list*
         MOV r8, [r8 + 0x08]         ; t_list.next*
         MOV [rbp - ofs_current], r8
+
         JMP .continue_loop2
 
       .continue_loop2:
-
-      JMP .loop2
+        JMP .loop2
 
     .end_loop2:
 
-    MOV r8d, [rbp - ofs_i]
-    INC r8d
-    MOV [rbp - ofs_i], r8d
+      MOV r8d, [rbp - ofs_i]
+      INC r8d
+      MOV [rbp - ofs_i], r8d
 
-    JMP .loop
+      JMP .loop
 
   .set_head_and_ret:
     MOV r8, [rbp - ofs_begin_list]  ; t_list**

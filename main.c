@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   test_ft_atoi_base();
   test_ft_list_push_front();
   test_ft_list_size();
-  // test_ft_list_sort();
+  test_ft_list_sort();
   test_ft_list_remove_if();
 }
 
@@ -282,9 +282,9 @@ void ft_list_swap(t_list *prev, t_list *current, t_list *next);
 
 //   int i = 1;
 //   t_list *head = *begin_list;
+//   t_list *prev;
+//   t_list *current;
 //   while (i < lst_len) {
-//     t_list *prev;
-//     t_list *current;
 //     prev = NULL;
 //     current = head;
     
@@ -313,6 +313,7 @@ static void test_ft_list_sort(){
     t_list *lst;
     lst = NULL;
 
+    // d e b g c f a
     ft_list_push_front(&lst, strdup("a"));
     ft_list_push_front(&lst, strdup("f"));
     ft_list_push_front(&lst, strdup("c"));
