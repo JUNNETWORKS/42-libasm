@@ -52,3 +52,4 @@ $ objdump -D -x86-asm-syntax=intel a.out
 - [メモリ、バイト、レジスタ - Jun's Homepage](https://www.mztn.org/lxasm64/amd03.html)
 - [x86-64のCalling Convention](https://freak-da.hatenablog.com/entry/2021/03/25/172248)
 - [初学者向け x86/MacOSX 64bit アセンブリ](http://ylb.jp/Tech/x86_64ASM/x86_64_onMac.html)
+- [X86-64 Architecture Guide](http://6.s081.scripts.mit.edu/sp18/x86-64-architecture-guide.html)

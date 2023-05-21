@@ -10,7 +10,7 @@ section .text
 ;
 ; ===== arguments =====
 ; rdi: 1st argument. begin_list
-; rsi: 2nd argument. begin_list
+; rsi: 2nd argument. data
 ;
 ; ===== local varibales =====
 ; [rbp - 0x08]: t_list **begin_list

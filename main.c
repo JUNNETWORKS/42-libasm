@@ -360,31 +360,30 @@ static void test_ft_list_sort(){
  }
 }
 
-
-void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
-  if (begin_list == NULL || cmp == NULL || free_fct ==  NULL) {
-    return;
-  }
-  t_list *prev = NULL;
-  t_list *current = *begin_list;
-  t_list *tmp;
-  while (current != NULL) {
-    if (cmp(current->data, data_ref) == 0) {
-      tmp = current;
-      current = current->next;
-      if (prev == NULL) {
-        *begin_list = current;
-      } else {
-        prev->next = current;
-      }
-      free_fct(tmp->data);
-      free(tmp);
-    } else {
-      prev = current;
-      current = current->next;
-    }
-  }
-}
+// void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
+//   if (begin_list == NULL || cmp == NULL || free_fct ==  NULL) {
+//     return;
+//   }
+//   t_list *prev = NULL;
+//   t_list *current = *begin_list;
+//   t_list *tmp;
+//   while (current != NULL) {
+//     if (cmp(current->data, data_ref) == 0) {
+//       tmp = current;
+//       current = current->next;
+//       if (prev == NULL) {
+//         *begin_list = current;
+//       } else {
+//         prev->next = current;
+//       }
+//       free_fct(tmp->data);
+//       free(tmp);
+//     } else {
+//       prev = current;
+//       current = current->next;
+//     }
+//   }
+// }
 
 static int is_same_integer(int *lhs, int *rhs) {
   return *lhs - *rhs;
@@ -428,7 +427,9 @@ static void test_ft_list_remove_if(){
   }
 
   {
-
+    t_list *lst = NULL;
+    int twenty = 20;
+    ft_list_remove_if(&lst, &twenty, is_same_integer, free);
   }
 
   {
