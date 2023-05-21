@@ -362,7 +362,7 @@ static void test_ft_list_sort(){
 
 
 void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
-  if (begin_list == NULL) {
+  if (begin_list == NULL || cmp == NULL || free_fct ==  NULL) {
     return;
   }
   t_list *prev = NULL;
@@ -393,35 +393,45 @@ static int is_same_integer(int *lhs, int *rhs) {
 static void test_ft_list_remove_if(){
   printf("\n\n\n\n========== ft_list_remove_if ==========\n");
 
-  t_list *lst = NULL;
+  {
+    t_list *lst = NULL;
 
-  // 20 -> 20 -> 5 -> 20 -> 10
-  int *tmp;
-  tmp = malloc(sizeof(int));
-  *tmp = 10;
-  ft_list_push_front(&lst, tmp);
-  tmp = malloc(sizeof(int));
-  *tmp = 20;
-  ft_list_push_front(&lst, tmp);
-  tmp = malloc(sizeof(int));
-  *tmp = 5;
-  ft_list_push_front(&lst, tmp);
-  tmp = malloc(sizeof(int));
-  *tmp = 20;
-  ft_list_push_front(&lst, tmp);
-  tmp = malloc(sizeof(int));
-  *tmp = 20;
-  ft_list_push_front(&lst, tmp);
+    // 20 -> 20 -> 5 -> 20 -> 10
+    int *tmp;
+    tmp = malloc(sizeof(int));
+    *tmp = 10;
+    ft_list_push_front(&lst, tmp);
+    tmp = malloc(sizeof(int));
+    *tmp = 20;
+    ft_list_push_front(&lst, tmp);
+    tmp = malloc(sizeof(int));
+    *tmp = 5;
+    ft_list_push_front(&lst, tmp);
+    tmp = malloc(sizeof(int));
+    *tmp = 20;
+    ft_list_push_front(&lst, tmp);
+    tmp = malloc(sizeof(int));
+    *tmp = 20;
+    ft_list_push_front(&lst, tmp);
 
-  int twenty = 20;
-  ft_list_remove_if(&lst, &twenty, is_same_integer, free);
+    int twenty = 20;
+    ft_list_remove_if(&lst, &twenty, is_same_integer, free);
 
-  t_list *current = lst;
-  assert(5 == *(int*)(current->data));
-  current = current->next;
-  assert(10 == *(int*)(current->data));
-  current = current->next;
-  assert(current == NULL);
+    t_list *current = lst;
+    assert(5 == *(int*)(current->data));
+    current = current->next;
+    assert(10 == *(int*)(current->data));
+    current = current->next;
+    assert(current == NULL);
 
-  cleanup_lst(lst, free);
+    cleanup_lst(lst, free);
+  }
+
+  {
+
+  }
+
+  {
+    ft_list_remove_if(NULL, NULL, NULL, NULL);
+  }
 }
