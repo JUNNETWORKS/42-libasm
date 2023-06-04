@@ -62,6 +62,7 @@ _ft_atoi_base:
   .loop:
     MOV r8, [rbp - 0x8]
     CMP BYTE [r8], BYTE 0
+    JE .ret
 
     ; idx = ft_strchr(base, *str);
     MOV rdi, [rbp - 0x10]

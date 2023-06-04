@@ -74,7 +74,7 @@ _ft_list_sort:
     .loop2:
       ; while (current->next) {
       MOV r8, [rbp - ofs_current]  ; t_list*
-      CMP QWORD [r8 + 0x08], 0
+      CMP QWORD [r8 + 0x8], 0
       JE .end_loop2
 
       ; if (cmp(current->data, current->next->data) > 0)
@@ -165,7 +165,7 @@ _ft_list_swap:
   CMP rdi, 0
   JE .skip1
   MOV [rdi + 0x8], rdx
-  .skip1
+  .skip1:
 
   ; if (next) {
   ;   current->next = next->next;
